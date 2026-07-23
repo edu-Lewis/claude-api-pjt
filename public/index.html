@@ -10,6 +10,23 @@
   <main>
     <h1>냉장고 사진으로 식재료 인식</h1>
 
+    <section id="auth-section">
+      <div id="auth-logged-out">
+        <h2>로그인</h2>
+        <input id="auth-email" type="email" placeholder="이메일" />
+        <input id="auth-password" type="password" placeholder="비밀번호 (6자 이상)" />
+        <div class="auth-buttons">
+          <button id="signup-btn">회원가입</button>
+          <button id="login-btn">로그인</button>
+        </div>
+        <p id="auth-status" class="hint"></p>
+      </div>
+      <div id="auth-logged-in" hidden>
+        <span id="auth-email-display"></span>
+        <button id="logout-btn">로그아웃</button>
+      </div>
+    </section>
+
     <input id="file-input" type="file" accept="image/*" />
     <div id="preview-wrap">
       <img id="preview" alt="미리보기" hidden />
@@ -38,8 +55,16 @@
         <pre id="recipe-raw"></pre>
       </details>
     </section>
+
+    <section id="saved-recipes-section" hidden>
+      <h2>내 레시피</h2>
+      <p id="saved-recipes-status" class="hint"></p>
+      <div id="saved-recipes-list"></div>
+    </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
