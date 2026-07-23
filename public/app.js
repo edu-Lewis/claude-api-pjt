@@ -1,4 +1,10 @@
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = window.supabase
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
+if (!supabase) {
+  console.error("Supabase 클라이언트를 번마오니치 못했습니다.");
+}
 
 const fileInput = document.getElementById("file-input");
 const preview = document.getElementById("preview");
@@ -168,6 +174,10 @@ recipeBtn.addEventListener("click", async () => {
 });
 
 signupBtn.addEventListener("click", async () => {
+  if (!supabase) {
+    authStatusEl.textContent = "로그인 기능을 사용할 수 없습니다. 새로고쳨 해주세요.";
+    return;
+  }
   const email = authEmailInput.value.trim();
   const password = authPasswordInput.value;
   if (!email || !password) {
@@ -183,6 +193,10 @@ signupBtn.addEventListener("click", async () => {
 });
 
 loginBtn.addEventListener("click", async () => {
+  if (!supabase) {
+    authStatusEl.textContent = "로그인 기능을 사용할 수 없습니다. 새로고쳨 해주세요.";
+    return;
+  }
   const email = authEmailInput.value.trim();
   const password = authPasswordInput.value;
   if (!email || !password) {
@@ -198,6 +212,7 @@ loginBtn.addEventListener("click", async () => {
 });
 
 logoutBtn.addEventListener("click", async () => {
+  if (!supabase) return;
   await supabase.auth.signOut();
 });
 
@@ -270,10 +285,14 @@ function updateAuthUI(session) {
   }
 }
 
-supabase.auth.onAuthStateChange((_event, session) => {
-  updateAuthUI(session);
-});
+if (supabase) {
+  supabase.auth.onAuthStateChange((_event, session) => {
+    updateAuthUI(session);
+  });
 
-supabase.auth.getSession().then(({ data }) => {
-  updateAuthUI(data.session);
-});
+  supabase.auth.getSession().then(({ data }) => {
+    updateAuthUI(data.session);
+  });
+} else {
+  authStatusEl.textContent = "로그인 기능을 사용할 수 없습니다. 새로고쳨 해주세요.";
+}
