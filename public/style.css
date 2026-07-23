@@ -1,0 +1,61 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 0 16px;
+  color: #222;
+}
+
+#preview-wrap {
+  margin: 12px 0;
+}
+
+#preview {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#status {
+  margin: 12px 0;
+  color: #666;
+}
+
+#items li {
+  padding: 4px 0;
+}
+
+pre {
+  white-space: pre-wrap;
+  background: #f4f4f4;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.recipe-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #eee;
+    background: #1a1a1a;
+  }
+  pre {
+    background: #2a2a2a;
+    color: #eee;
+  }
+}
