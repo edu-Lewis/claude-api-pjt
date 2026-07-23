@@ -1,9 +1,9 @@
-const supabase = window.supabase
+const supabaseClient = window.supabase
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
 
-if (!supabase) {
-  console.error("Supabase 클라이언트를 번마오니치 못했습니다.");
+if (!supabaseClient) {
+  console.error("Supabase 클라이언트를 번마오니치 못했습니다. 로기인/레시피 저장 기능을 사용할 수 없습니다.");
 }
 
 const fileInput = document.getElementById("file-input");
@@ -114,7 +114,7 @@ function renderRecipeCard(recipe) {
   saveBtn.addEventListener("click", async () => {
     saveBtn.disabled = true;
     saveBtn.textContent = "저장 중...";
-    const { error } = await supabase.from("recipes_tbl").insert({
+    const { error } = await supabaseClient.from("recipes_tbl").insert({
       title: recipe.title ?? "(제목 없음)",
       used_ingredients: recipe.used_ingredients ?? [],
       additional_ingredients: recipe.additional_ingredients ?? [],
@@ -174,7 +174,7 @@ recipeBtn.addEventListener("click", async () => {
 });
 
 signupBtn.addEventListener("click", async () => {
-  if (!supabase) {
+  if (!supabaseClient) {
     authStatusEl.textContent = "로그인 기능을 사용할 수 없습니다. 새로고쳨 해주세요.";
     return;
   }
@@ -186,14 +186,14 @@ signupBtn.addEventListener("click", async () => {
   }
 
   authStatusEl.textContent = "회원가입 중...";
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { error } = await supabaseClient.auth.signUp({ email, password });
   authStatusEl.textContent = error
     ? error.message
     : "가입 확인을 위해 이메일을 확인해주세요. (확인 후 로그인)";
 });
 
 loginBtn.addEventListener("click", async () => {
-  if (!supabase) {
+  if (!supabaseClient) {
     authStatusEl.textContent = "로그인 기능을 사용할 수 없습니다. 새로고쳨 해주세요.";
     return;
   }
@@ -205,15 +205,15 @@ loginBtn.addEventListener("click", async () => {
   }
 
   authStatusEl.textContent = "로그인 중...";
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) {
     authStatusEl.textContent = error.message;
   }
 });
 
 logoutBtn.addEventListener("click", async () => {
-  if (!supabase) return;
-  await supabase.auth.signOut();
+  if (!supabaseClient) return;
+  await supabaseClient.auth.signOut();
 });
 
 function renderSavedRecipe(row) {
@@ -231,7 +231,7 @@ function renderSavedRecipe(row) {
   deleteBtn.textContent = "삭제";
   deleteBtn.addEventListener("click", async () => {
     deleteBtn.disabled = true;
-    const { error } = await supabase.from("recipes_tbl").delete().eq("id", row.id);
+    const { error } = await supabaseClient.from("recipes_tbl").delete().eq("id", row.id);
     if (error) {
       console.error("delete recipe error:", error.message);
       deleteBtn.disabled = false;
@@ -248,7 +248,7 @@ async function loadSavedRecipes() {
   if (!currentSession) return;
 
   savedRecipesStatusEl.textContent = "불러오는 중...";
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("recipes_tbl")
     .select("*")
     .order("created_at", { ascending: false });
@@ -285,12 +285,12 @@ function updateAuthUI(session) {
   }
 }
 
-if (supabase) {
-  supabase.auth.onAuthStateChange((_event, session) => {
+if (supabaseClient) {
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
     updateAuthUI(session);
   });
 
-  supabase.auth.getSession().then(({ data }) => {
+  supabaseClient.auth.getSession().then(({ data }) => {
     updateAuthUI(data.session);
   });
 } else {
