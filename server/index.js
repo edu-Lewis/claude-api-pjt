@@ -13,6 +13,10 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/api", recognizeRouter);
 app.use("/api", recipesRouter);
 
-app.listen(config.port, () => {
-  console.log(`Server running at http://localhost:${config.port}`);
-});
+if (require.main === module) {
+  app.listen(config.port, () => {
+    console.log(`Server running at http://localhost:${config.port}`);
+  });
+}
+
+module.exports = app;
